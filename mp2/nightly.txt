@@ -35,9 +35,9 @@ R0=x0000 R1=x7FFF R2=x0000 R3=x0000 R4=x0000 R5=x0000 R6=x0000 R7=x0490
                    x0494 x0FF9 BRNZP TRAP_HALT
 Unknown command.  Type 'h' for help.
 
-Pass nightly test.
 Warning!!! Answer is not store in R5. 
+Failed the nightly test!
 This nightly test is focusing on compilation error not functionality test.
 This nightly report only tests on the released testcases.
 There are many hidden edge testcase for the MP. Please test it yourselve.
-Timestamp: 2021-02-08_00-34-51
+Timestamp: 2021-02-08_16-48-12
