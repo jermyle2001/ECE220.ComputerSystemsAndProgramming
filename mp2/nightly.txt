@@ -40,4 +40,5 @@ Failed the nightly test!
 This nightly test is focusing on compilation error not functionality test.
 This nightly report only tests on the released testcases.
 There are many hidden edge testcase for the MP. Please test it yourselve.
-Timestamp: 2021-02-08_16-48-12
+HIGHLY RECOMMEND YOU TO START YOUR MP EARLY!!!!!!!
+Timestamp: 2021-02-08_18:01:57
