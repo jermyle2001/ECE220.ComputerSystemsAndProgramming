@@ -1,0 +1,45 @@
+// Symbol table
+// Scope level 0:
+//	Symbol Name       Page Address
+//	----------------  ------------
+//	GET_NEXT_CHAR     3000
+//	EQUAL_CHECK       300F
+//	INVALID_CALL      3018
+//	EVALUATE_CHAR     301B
+//	PLUS_CHECK        3027
+//	SUBT_CHECK        302E
+//	MULT_CHECK        3035
+//	DIVD_CHECK        303C
+//	EXP_CHECK         3043
+//	PUSH              304A
+//	OVERFLOW          3058
+//	DONE_PUSH         3059
+//	PUSH_SaveR3       305C
+//	PUSH_SaveR4       305D
+//	POP               305E
+//	UNDERFLOW         306B
+//	DONE_POP          306C
+//	PLUS              306F
+//	MIN               3076
+//	EXP               307D
+//	DIV               3084
+//	MULT              308B
+//	PRINT_HEX         3092
+//	R7_SAVE1          3093
+//	POP_SaveR3        3094
+//	POP_SaveR4        3095
+//	STACK_END         3096
+//	STACK_START       3097
+//	STACK_TOP         3098
+//	ASCII_SPACE       3099
+//	ASCII_EQUAL       309A
+//	INVALID_EXP       309B
+//	ASCII_ZERO        30AE
+//	ASCII_NINE        30AF
+//	ASCII_MULT        30B0
+//	ASCII_PLUS        30B1
+//	ASCII_SUBT        30B2
+//	ASCII_DIVD        30B3
+//	ASCII_EXPN        30B4
+//	TEST_OPERATION    30B5
+
