@@ -342,4 +342,4 @@ Late submission: 0
 Functionality: 90
 Comments and Style: 
 Intro paragraph: 
-Total: 
+Total: 100 
