@@ -17,19 +17,17 @@ Your score is 2100 and current max score is 2100.
 With guess 2, you got 4 perfect matches and 0 misplaced matches.
 Your score is 4000 and current max score is 4000.
 You guessed correctly in 2 guesses.*****make_guess test1-2: PASS
-With guess 1, you got 0 perfect matches and 0 misplaced matches.
-Your score is 0 and current max score is 0.
-*****make_guess test2-1: FAIL (rt value)
-
-With guess 2, you got 0 perfect matches and 4 misplaced matches.
+make_guess: invalid guess
+*****make_guess test2-1: PASS
+With guess 1, you got 0 perfect matches and 4 misplaced matches.
 Your score is 400 and current max score is 400.
 *****make_guess test2-2: PASS
-With guess 3, you got 2 perfect matches and 0 misplaced matches.
+With guess 2, you got 2 perfect matches and 0 misplaced matches.
 Your score is 2000 and current max score is 2000.
 *****make_guess test3-1: PASS
-With guess 4, you got 4 perfect matches and 0 misplaced matches.
+With guess 3, you got 4 perfect matches and 0 misplaced matches.
 Your score is 4000 and current max score is 4000.
-You guessed correctly in 4 guesses.*****make_guess test3-2: PASS
+You guessed correctly in 3 guesses.*****make_guess test3-2: PASS
 Testing three output files
 Files grade/teststu_output0 and grade/testgold_output0 differ
 Files score2 and score_gold differ
@@ -49,22 +47,20 @@ Your score is 2100 and current max score is 2100.
 With guess 2, you got 4 perfect matches and 0 misplaced matches.
 Your score is 4000 and current max score is 4000.
 You guessed correctly in 2 guesses.*****make_guess test1-2: PASS
-With guess 1, you got 0 perfect matches and 0 misplaced matches.
-Your score is 0 and current max score is 0.
-*****make_guess test2-1: FAIL (rt value)
-
-With guess 2, you got 0 perfect matches and 4 misplaced matches.
+make_guess: invalid guess
+*****make_guess test2-1: PASS
+With guess 1, you got 0 perfect matches and 4 misplaced matches.
 Your score is 400 and current max score is 400.
 *****make_guess test2-2: PASS
-With guess 3, you got 2 perfect matches and 0 misplaced matches.
+With guess 2, you got 2 perfect matches and 0 misplaced matches.
 Your score is 2000 and current max score is 2000.
 *****make_guess test3-1: PASS
-With guess 4, you got 4 perfect matches and 0 misplaced matches.
+With guess 3, you got 4 perfect matches and 0 misplaced matches.
 Your score is 4000 and current max score is 4000.
-You guessed correctly in 4 guesses.*****make_guess test3-2: PASS
-Failed the nightly test.
+You guessed correctly in 3 guesses.*****make_guess test3-2: PASS
+Pass the nightly test!!!
 This nightly test is focusing on compilation error not functionality test.
 This nightly report only tests on the released testcases.
 There are many hidden edge testcase for the MP. Please test it yourselve.
 HIGHLY RECOMMEND YOU TO START YOUR MP EARLY!!!!!!!
-Timestamp: 2021-03-12_11:07:28
+Timestamp: 2021-03-12_12:06:56
