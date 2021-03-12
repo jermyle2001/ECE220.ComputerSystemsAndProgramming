@@ -103,9 +103,14 @@ for(k=0;k<10;k++){ //throws characters in w,x,y,z into solutions array
 }
 
 int make_guess (const char guess_str[]) {
-char b[20], c[20], d[20], a[20];
+char b[20], c[20], d[20], a[20], e[20];
 int i,k,j;
-sscanf(guess_str,"%s %s %s %s", a, b, c, d);
+sscanf(guess_str,"%s %s %s %s ", a, b, c, d);
+if(sscanf(guess_str,"%s %s %s %s %s", a, b, c, d, e) !=4){
+	printf("make_guess: invalid guess\n");        
+	return 0;
+}
+
 char *ptr[4] = {a,b,c,d}; //we create another array to reference each individual string
 for(i=0;i<4;i++){ //check for validity, iterate through all four strings
     if(is_valid(ptr[i])==0){
