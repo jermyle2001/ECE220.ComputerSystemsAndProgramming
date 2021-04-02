@@ -152,7 +152,7 @@ for(k = 0; k < cur_game->cols; k++){ //Iterate across column
       break; //break loop, tiles have been merged
 }
      else{
-      break;
+       break;
 }
 }
 }
@@ -166,6 +166,7 @@ for(k = 0; k < cur_game->cols; k++){ //Iterate across column
 //Then storing the value within the non-empty tile in the empty tile and erasing the value
 //In the non-empty tile
 
+printf("Now moving tiles!\n");
 for(k = 0; k < cur_game->cols; k++){ //Iterate across columns
  for(i = 0; i < cur_game->rows; i++){ //Iterate down rows
   if(cur_game->cells[i * cur_game->cols + k] == -1){
@@ -294,48 +295,6 @@ return 1;
 
 int move_d(game * cur_game){ //slide to the right
     //YOUR CODE STARTS HERE - SIMILAR APPROACH TO MOVE_W
-int i,j,k,tempval1,templocation1;
-int flag = 0;
-for(i = 0; i < cur_game->rows; i++){ //Iterate through rows (down)
- for(k = cur_game->cols - 1; k > -1; k--){ //Iterate through columns backwards (left)
-  if(cur_game->cells[i*cur_game->cols+k] != -1){ //Iterate left until a nonempty tile found
-   templocation1 = i*cur_game->cols+k;
-   tempval1 = cur_game->cells[i*cur_game->cols + k];
-   for(j = k - 1; j > -1; j--){
-    if(cur_game->cells[i*cur_game->cols + j] != -1){
-     if(tempval1  == cur_game->cells[i*cur_game->cols + j]){
-      cur_game->cells[templocation1] = tempval1*2;
-      cur_game->cells[i*cur_game->cols + j] = -1;
-      cur_game->score = cur_game->score + tempval1*2;
-      flag++;
-      break;
-     }
-     else{
-      break;}
-}}}}}
-
-//All tiles merged. Move remaining tiles
-
-for(i = 0; i < cur_game->rows; i++){ //Iterate through rows (down)
- for(k = cur_game->cols - 1; k > -1; k--){ //Iterate through columns backwards (left)
-  if(cur_game->cells[i*cur_game->cols + k] == -1){ //Iterate left until empty file found
-   templocation1 = i*cur_game->cols + k;
-   for(j = k - 1; j > -1; j--){ //Iterate through columns backwards (left)
-    if(cur_game->cells[i*cur_game->cols + j] != -1){ //Iterate until nonempty tile found
-     cur_game->cells[templocation1] = cur_game->cells[i*cur_game->cols + j]; //Move tile to empty spot
-     cur_game->cells[i*cur_game->cols + j] = -1; //Erase second tile
-     flag++;
-     break;
-}}}}}
-
-//All tiles moved. Check if any actions were performed.
-if(flag == 0)
-return 0;
-else
-return 1;
-
-
-
 
 };
 
@@ -350,128 +309,13 @@ int legal_move_check(game * cur_game)
 PERSONAL NOTES:
 Approach can be summarized as creating a temp board and checking by running through all four moves
 Board may need to be recreated every time a move is performed
+
 */
-int i,j,k,tempval1,templocation1;
-int flag = 0;
-for(k = 0; k < cur_game->cols; k++){ //Iterate across column
- for(i = 0; i < cur_game->rows; i++){//Iterate down rows
-  if(cur_game->cells[i * cur_game->cols + k] != -1){ //If current cell value is NOT -1 - MAY NEED DEREFERENCE!!!! (Check later)
-   templocation1 = i * cur_game->cols + k;
-   tempval1 = cur_game->cells[i * cur_game->cols + k];
-   for(j = i + 1; j < cur_game->rows; j++){ //Iterate for rows-i times, looking for compatible tiles 
-    if(cur_game->cells[j * cur_game->cols + k] != -1){ //If new location's value is also not -1 - MAY NEED DEREFERENCE
-     if(tempval1 == cur_game->cells[j * cur_game->cols + k]){ //If the two values are the same, merge and remove second location
-      flag++;
-      break; //break loop, tiles have been merged
+
+
+
+    return 1;
 }
-     else{
-      break;
-}
-}
-}
-}
-}
-}
-
-for(k = 0; k < cur_game->cols; k++){ //Iterate across columns
- for(i = 0; i < cur_game->rows; i++){ //Iterate down rows
-  if(cur_game->cells[i * cur_game->cols + k] == -1){
-   templocation1 = i * cur_game->cols + k;
-   for(j = (i + 1); j < (cur_game->rows); j++){ //Iterate starting from row i, rows-i tkimes, looking for non-empty tiles
-    if(cur_game->cells[j * cur_game->cols + k] != -1){ //If non-empty tile, then move second value into first location and empty second location
-     flag++;
-     break;
-}
-}
-}
-}
-}
-
-for(k = cur_game->cols - 1; k > -1; k--){ //Iterate through columns backwards, subtract 1 to replicate array boundaries/syntax 
-					  //(ex. # of columns is 4, array columns only goes 0 to 3)
- for(i = cur_game->rows - 1; i > -1; i--){//Iterate through rows backwards, subtract 1 to replicate array boundaries/syntax
-  if(cur_game->cells[i*cur_game->cols + k] != -1){ //If current cell is NOT -1 - loop will iterate until it finds non-empty cell
-   templocation1 = i*cur_game->cols + k; //Set templocation
-   tempval1 = cur_game->cells[i*cur_game->cols + k]; //Set tempval
-   for(j = i - 1; j > -1; j--){
-    if(cur_game->cells[j*cur_game->cols + k] != -1){ //Upon finding a non-empty tile, evaluate if they are the same
-     flag++;
-     break;
-    }
-    else{
-     break;
-    }
-}}}}
-
-for(k = cur_game->cols - 1; k > -1; k--){ //Iterate through columns backwards
- for(i = cur_game->rows - 1; i > -1; i--){ //Iterate through rows backwards
-  if(cur_game->cells[i*cur_game->cols + k] == -1){ //Loop until empty tile found
-   templocation1 = i*cur_game->cols + k;
-   for(j = i - 1; j > -1; j--){ //Loop until nonempty tile found
-    if(cur_game->cells[j*cur_game->cols + k] != -1){ 
-     flag++;
-     break;
-}}}}}
-
-for(i = 0; i < cur_game->rows; i++){ //Iterate through rows
- for(k = 0; k < cur_game->cols; k++){ //Iterate through columns
-  if(cur_game->cells[i*cur_game->cols + k] != -1){ //Iterate through board until non-empty tile found
-   templocation1 = i*cur_game->cols + k;
-   tempval1 = cur_game->cells[i*cur_game->cols + k];
-   for(j = k + 1; j < cur_game->cols; j++){ //Iterate through rest of columns until another non-empty tile found
-    if(cur_game->cells[i*cur_game->cols + j] != -1){
-     if(tempval1 == cur_game->cells[i*cur_game->cols + j]){
-      flag++;
-      break;
-     }
-     else{
-      break;}
-}}}}}
-
-for(i = 0; i < cur_game->rows; i++){ //Iterate through rows
- for(k = 0; k < cur_game->cols; k++){ //Iterate through columns
-  if(cur_game->cells[i*cur_game->cols + k] == -1){ //Iterate until empty tile found
-   templocation1 = i * cur_game->cols + k;
-   for(j = k + 1; j < cur_game->cols; j++){ //Iterate through columns and find nonempty tile
-    if(cur_game->cells[i*cur_game->cols + j] != -1){
-     flag++;
-     break;
-}}}}}
-
-for(i = 0; i < cur_game->rows; i++){ //Iterate through rows (down)
- for(k = cur_game->cols - 1; k > -1; k--){ //Iterate through columns backwards (left)
-  if(cur_game->cells[i*cur_game->cols+k] != -1){ //Iterate left until a nonempty tile found
-   templocation1 = i*cur_game->cols+k;
-   tempval1 = cur_game->cells[i*cur_game->cols + k];
-   for(j = k - 1; j > -1; j--){
-    if(cur_game->cells[i*cur_game->cols + j] != -1){
-      flag++;
-      break;
-     }
-     else{
-      break;}
-}}}}
-
-for(i = 0; i < cur_game->rows; i++){ //Iterate through rows (down)
- for(k = cur_game->cols - 1; k > -1; k--){ //Iterate through columns backwards (left)
-  if(cur_game->cells[i*cur_game->cols + k] == -1){ //Iterate left until empty file found
-   templocation1 = i*cur_game->cols + k;
-   for(j = k - 1; j > -1; j--){ //Iterate through columns backwards (left)
-    if(cur_game->cells[i*cur_game->cols + j] != -1){ //Iterate until nonempty tile found
-     flag++;
-     break;
-}}}}}
-
-if(flag == 0) //Using flag system, check to see if any actions were performed
-return 0;
-else
-return 1;
-
-
-
-
-
-} //End of function
 
 
 /*! code below is provided and should not be changed */
