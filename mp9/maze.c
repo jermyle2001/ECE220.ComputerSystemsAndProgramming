@@ -27,20 +27,57 @@ typedef struct {
 maze_t * createMaze(char * fileName)
 {
     int i, j;
-    FILE* fpointer = fopen(fileName, "r"); //Open file, create pointer fpointer
+    char character;
+    FILE* fpointer = fopen(fileName, "r");
     maze_t* maze = (maze_t*)malloc(sizeof(maze_t)); //Allocate memory for maze struct
-    fscanf(fpointer, "%d %d", maze->width, maze->height); //Scan file for maze dimensions, pop off stream and load into maze.width and maze.height
-
-    maze->cells = (char**)malloc(maze->height * sizeof(char)); //Allocates memory for first set of arrays which holds pointers - basically, holds the pointer for each row
+    fscanf(fpointer, "%d %d", &(maze->width), &(maze->height)); //Scan file for maze dimensions, pop off stream and load into maze.width and maze.height
+    maze->cells = (char**)malloc(maze->height * sizeof(char*));
+    char testvar = fgetc(fpointer);
     for(i = 0; i < maze->height; i++){
-        *(maze->cells + i) = (char*)malloc(maze->width * sizeof(char)); //Now the memory for each row has been allocated - pointer towards row pointer is char**, row pointer is char*
+        *(maze->cells + i) = (char*)malloc((maze->width) * sizeof(char)); //Now the memory for each row has been allocated - pointer towards row pointer is char**, row pointer is char*
     }
+     for (i = 0; i < maze->height; i++){
+         for(j = 0; j < maze->width + 1; j++){
+        //i is the row, j is the column (of matrix)
+        //first, read the character 
+        
+        fscanf(fpointer,"%c", &character);
+        if(character == '\n'){ //If newline found, increment row, reset columns, and continue loop
+            continue;
+        }
+         if(character == 'S'){ //If start found, set startColumn and startRow
+           maze->startRow = i;
+           maze->startColumn = j;
+        }
+        if(character == 'E'){ //If start found, set startColumn and startRow
+           maze->endRow = i;
+           maze->endColumn = j;
+        }
+        *(*(maze->cells + i) + j) = character; //throw character into designated location
+ 
+        //*(maze->cells + i) for rows
+        //*(*(maze->cells + i) + j) for columns
+    }}
+    /*
+    int i, j;
+    FILE* fpointer = fopen("fileName", "r"); //Open file, create pointer fpointer
+    maze_t* maze = (maze_t*)malloc(sizeof(maze_t)); //Allocate memory for maze struct
+    fscanf(fpointer, "%d %d", &(maze->width), &(maze->height)); //Scan file for maze dimensions, pop off stream and load into maze.width and maze.height
+    maze->cells = (char**)malloc(maze->height * sizeof(char*)); //Allocates memory for first set of arrays which holds pointers - basically, holds the pointer for each row
+
+    for(i = 0; i < maze->height; i++){
+        *(maze->cells + i) = (char*)malloc((maze->width) * sizeof(char)); //Now the memory for each row has been allocated - pointer towards row pointer is char**, row pointer is char*
+    }
+
         i = 0;
         j = 0;
     while(!feof(fpointer)){ //Fill board
         //i is the row, j is the column (of matrix)
         //first, read the character
-        char character = fgetc(fpointer);
+        char character;// = fgetc(fpointer);
+        fscanf(fpointer,"%c", &character);
+        if(character == '\0')
+        continue;
         if(character == '\n'){ //If newline found, increment row, reset columns, and continue loop
             i++;
             j = 0;
@@ -56,11 +93,13 @@ maze_t * createMaze(char * fileName)
         }
         *(*(maze->cells + i) + j) = character; //throw character into designated location
         j++; //Increment columns, continue until end of file
-        //*(maze->cells + i) for rows
-        //*(*(maze->cells + i) + j) for columns
+        
     }
     //Now return a pointer
+        fclose(fpointer);
+        */
 
+    fclose(fpointer);
     return maze;
 }
 
@@ -79,6 +118,7 @@ void destroyMaze(maze_t * maze)
     }
     free(maze->cells);
     free(maze);
+    
 }
 
 /*
@@ -94,11 +134,12 @@ void printMaze(maze_t * maze)
 {
     int i,j;
     for(i = 0; i < maze->height; i++){
-        for(j = 0; j < maze->width; j++){
+        for(j = 0; j < maze->width + 1; j++){
             printf("%c", *(*(maze->cells + i) + j));
         }
         printf("\n");
     }
+    
 }
 
 /*
@@ -112,6 +153,23 @@ void printMaze(maze_t * maze)
  */ 
 int solveMazeDFS(maze_t * maze, int col, int row)
 {
-    // Your code here. Make sure to replace following line with your own code.
+    if(col > maze->width || row > maze->height || col < -1 || row < -1)
+        return 0;   
+    if(*(*(maze->cells + row) + col) == END){
+        *(*(maze->cells + maze->startRow) + maze->startColumn) = START;
+        return 1;
+    }
+    if(*(*(maze->cells + row) + col) == WALL || *(*(maze->cells + row) + col) == VISITED || *(*(maze->cells + row) + col) == PATH)
+    return 0;
+    *(*(maze->cells + row) + col) = PATH; //STep 4 - set (col, row) as part of the solution to the maze
+     if(solveMazeDFS(maze, col, row + 1) == 1)
+           return 1;
+     if(solveMazeDFS(maze, col, row - 1) == 1)
+           return 1;
+      if(solveMazeDFS(maze, col + 1, row) == 1)
+           return 1;
+     if(solveMazeDFS(maze, col - 1, row) == 1)
+           return 1;    
+    *(*(maze->cells + row) + col) = VISITED;
     return 0;
 }
