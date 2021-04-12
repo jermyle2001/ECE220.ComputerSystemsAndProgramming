@@ -144,7 +144,7 @@ void printMaze(maze_t * maze)
  */ 
 int solveMazeDFS(maze_t * maze, int col, int row)
 {
-    if(col > maze->width || row > maze->height || col < -1 || row < -1) //Base case 1: Out of bounds, and return 0
+    if(col >= maze->width || row >= maze->height || col <= -1 || row <= -1) //Base case 1: Out of bounds, and return 0
         return 0;   
     if(*(*(maze->cells + row) + col) == END){
         *(*(maze->cells + maze->startRow) + maze->startColumn) = START; //Base case 2: End is found and return 1
