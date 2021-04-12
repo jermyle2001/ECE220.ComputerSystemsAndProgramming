@@ -3,6 +3,8 @@
 #include "maze.h"
 
 /*
+Partners: tmshu2, jeremyl6, bgin2
+
 The program accomplishes the MP's goals by utilising File I/O and recursive backtracking.
 The function createMaze takes advantage of the file stream and scans the content into the desired structure. 
 The structure, containing a double pointer, allocates spaces for each character in the file in order to replicate
