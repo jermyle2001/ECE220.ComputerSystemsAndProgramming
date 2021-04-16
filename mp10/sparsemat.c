@@ -53,9 +53,10 @@ sp_tuples * load_tuples(char* input_file) //Opne file with name 'input_file', re
 //return value of element at the given row and column
 double gv_tuples(sp_tuples * mat_t,int row,int col)
 {
+    int i;
     sp_tuples_node* nodeptr = mat_t->tuples_head;
-    while(nodeptr != NULL){
-        if(row == nodeptr->row && col == nodeptr->col)
+    for(i = 0; i < mat_t->nz; i++){ //Construct iterates through linked list until end (when nodeptr = NULL)
+        if(row == nodeptr->row && col == nodeptr->col) //If an index exists within the list, that means a nonzero entity is present
         {
             return nodeptr->value;
         }
@@ -81,6 +82,12 @@ void set_tuples(sp_tuples * mat_t, int row, int col, double value)
     if(value == 0){ //If value is zero, we need to delete the associated node (if it exists)
         while(nodeptr != NULL){
             if(nodeptr->row == row && nodeptr->col == col){
+                if(nodeptr == mat_t->tuples_head){
+                    mat_t->tuples_head = nodeptr->next;
+                    free(nodeptr);
+                    mat_t->nz--;
+                    return;
+                }
                 //Update next pointer of previous node
                 prevptr->next = nodeptr->next; 
                 free(nodeptr); //Free associated memory at node
@@ -90,6 +97,7 @@ void set_tuples(sp_tuples * mat_t, int row, int col, double value)
             prevptr = nodeptr; //Set prevptr to current node
             nodeptr = nodeptr->next; //Set nodeptr to next node
         }
+        return; //No associated nodes (linked list does not exist yet, and since value is zero we return)
     }
     //3. What if head is NULL? Create new node and set it as head - FINISHED
     if(nodeptr == NULL){ //If nodeptr is NULL (i.e. no headnode exists), then create head
@@ -108,12 +116,12 @@ void set_tuples(sp_tuples * mat_t, int row, int col, double value)
             tempnode->col = col;
             tempnode->value = value;
             //Set nextnode of previous node, and nextnode of current node
-            tempnode->next = nodeptr->next;
+            tempnode->next = nodeptr;
             mat_t->tuples_head = tempnode;
             mat_t->nz++; //Nonzero entry, increment nz
         return;
     }
-    while(nodeptr != NULL){//This statement 
+    while(nodeptr != NULL){//This statement loops until no more nodes exist
         if(nodeptr->row == row && nodeptr->col ==col){ //If index exists, update value
             nodeptr->value = value; //Change value at node and return
             return;
@@ -192,43 +200,55 @@ void save_tuples(char * file_name, sp_tuples * mat_t)
 
 
 sp_tuples * add_tuples(sp_tuples * matA, sp_tuples * matB){
-    int i;
-    double value, check;
-    sp_tuples_node* matCptr; //Points to current node being looked at
-    sp_tuples_node* matAptr = matA->tuples_head; //Points to head of matA
-    sp_tuples_node* matBptr = matB->tuples_head; //Points to head of matB
-    sp_tuples* retmat = (sp_tuples*)malloc(sizeof(sp_tuples)); //Create headnode of matrix C
+/*
+INPUT: matrix A and B both with size m by n.
+INITIATE matrix C with the same size as A and B and nz = 0
+FOR every non-zero entry in A                   (traverse the linked-list in matA)
+    i = row of current entry in A; j = column of entry
+    C_(i,j) = C_(i,j) + A_(i,j)
+FOR every non-zero entry in B                   (do the same for matB)
+    i = row of current entry in B; j = column of entry
+    C_(i,j) = C_(i,j) + B_(i,j)
+  
+We are given matrices A and B (matA and matB, respectively), need to merge
+them into the same matrix (matrix C). Follow the given algorithm:
+*/
+    //Check if matrices can be added. If not, return NULL.
+    if(matA->m != matB->m || matA->n != matB->n)
+    return NULL;
+
+    sp_tuples* retmat = (sp_tuples*)malloc(sizeof(sp_tuples)); //Initialize headpointer for matrix C
+    
+    //Initialize values of matrix C (row and col), set nz to 0
     retmat->m = matA->m;
     retmat->n = matA->n;
     retmat->nz = 0;
-    matCptr = (sp_tuples_node *)malloc(sizeof(sp_tuples_node)); //Created new node, currentptr points to it
-    retmat->tuples_head = matCptr; //Set headpointer for retmat
+    retmat->tuples_head = NULL;
+    //Initialize temp pointers for usage
+    sp_tuples_node* matAnode = matA->tuples_head;
+    sp_tuples_node* matBnode = matB->tuples_head;
+    int i;
+    double value, checkA;
+    //Throw matrix A into matrix C, use set_tuples and gv_tuples
     for(i = 0; i < matA->nz; i++){
-        value = gv_tuples(matA, matAptr->row, matAptr->col); //Return value stored at row, col of A
-        matCptr->row = matAptr->row; //Initialize node
-        matCptr->col = matAptr->col;
-        matCptr->value = value;
-        retmat->nz++;
-        matCptr->next = (sp_tuples_node *)malloc(sizeof(sp_tuples_node)); //Allocate new memory for next node
-        matCptr = matCptr->next; //Change matCptr to next node
-        matAptr = matAptr->next; //Change matAptr to next node
+        value = gv_tuples(matA, matAnode->row, matAnode->col);
+        set_tuples(retmat, matAnode->row, matAnode->col, value);
+        matAnode = matAnode->next;
     }
-    free(matCptr);
-    matCptr = retmat->tuples_head; //Reset matCptr to beginning of list
-    for(i=0;i < matB->nz; i++){
-        value = gv_tuples(matB, matBptr->row, matBptr->col); //Return value stored at row, col of matB
-        check = gv_tuples(matA, matBptr->row, matBptr->col);
-        if(check != 0){
-            value = value + check;
-            set_tuples(retmat, matBptr->row, matBptr->col, value);
+    for(i = 0; i < matB->nz;i++){
+        value = gv_tuples(matB, matBnode->row, matBnode->col); //Takes value in matrix B at index, stores into "value"
+        checkA = gv_tuples(matA, matBnode->row, matBnode->col); //Takes value in matrix A at index, stores into "checkA"
+        if(checkA != 0){ //If value in matrix A at index is nonzero, then add values and set tuple
+            value = value + checkA;
+            set_tuples(retmat, matBnode->row, matBnode->col, value);
         }
-        else{
-            set_tuples(retmat, matBptr->row, matBptr->col, value);
+        else{ //Else - value in matrix A at specified index is zero, 
+            set_tuples(retmat, matBnode->row, matBnode->col, value);
         }
+        matBnode = matBnode->next;
+    }
 
 
-
-    }    
 	return retmat;
 }
 
