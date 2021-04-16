@@ -58,7 +58,7 @@ double gv_tuples(sp_tuples * mat_t,int row,int col)
         if(row == nodeptr->row && col == nodeptr->col)
         {
             return nodeptr->value;
-        }        
+        }
         nodeptr = nodeptr->next; //Iterate through list
     }
     return 0; //Otherwise, return 0 (if not in link, is not a nonzero entity).
@@ -102,7 +102,7 @@ void set_tuples(sp_tuples * mat_t, int row, int col, double value)
         return;
     }
     //4. What if the correct position to insert is at the head? Have new node point to old head and update head
-    if(nodeptr->row >= row && nodeptr->col >= col){ //If index is less than index of the node currently looked at (nodeptr), place new node in b/w next node and prev node
+    if((nodeptr->row == row && nodeptr->col > col)||nodeptr->row > row){ //If index is less than index of the node currently looked at (nodeptr), place new node in b/w next node and prev node
             sp_tuples_node* tempnode = (sp_tuples_node*)malloc(sizeof(sp_tuples_node)); //Create associated memory with head node
             tempnode->row = row; //Initialize values for headnode
             tempnode->col = col;
@@ -119,7 +119,7 @@ void set_tuples(sp_tuples * mat_t, int row, int col, double value)
             return;
         }
         //2. What if there is already a node with (row, col)? Replace existing value with new value 
-        if(nodeptr->row >= row && nodeptr->col >= col){ //If index is less than index of the node currently looked at (nodeptr), place new node in b/w next node and prev node
+        if((nodeptr->row == row && nodeptr->col > col)||nodeptr->row > row){ //If index is less than index of the node currently looked at (nodeptr), place new node in b/w next node and prev node
             sp_tuples_node* tempnode = (sp_tuples_node*)malloc(sizeof(sp_tuples_node)); //Create associated memory with head node
             tempnode->row = row; //Initialize values for headnode
             tempnode->col = col;
@@ -134,7 +134,7 @@ void set_tuples(sp_tuples * mat_t, int row, int col, double value)
         prevptr = nodeptr; //Set prevptr to current node
         nodeptr = nodeptr->next; //Set nodeptr to next node
     }
-    //If it gets past all these statements, indicates new node needs to be created at end of list
+//NodeIf it gets past all these statements, indicates new node needs to be created at end of list
     sp_tuples_node* tempnode = (sp_tuples_node*)malloc(sizeof(sp_tuples_node)); //Create memory for new node
     tempnode->row = row; //Initialize values for headnode
     tempnode->col = col;
