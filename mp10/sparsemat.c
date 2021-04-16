@@ -44,6 +44,7 @@ sp_tuples * load_tuples(char* input_file) //Opne file with name 'input_file', re
     tuple->nz = 0;
     while(!feof(fpointer)){
         fscanf(fpointer,"%d %d %lf", &row, &col, &value);
+        printf("Load: The values of row, col, and value are: %d %d %lf\n", row, col, value);
         set_tuples(tuple, row, col, value);
     }
     fclose(fpointer);
@@ -150,35 +151,6 @@ void set_tuples(sp_tuples * mat_t, int row, int col, double value)
     tempnode->next = NULL;
     prevptr->next = tempnode; //Set prevnode's next to tempnode (newnode)
     mat_t->nz++;
-    /* INITIALIZE THESE VARS AFTER WE FINISH WRITING OTHER THINGS
-    node1 - first node encountered
-    node2 - node after first node
-    currentnode - node you're trying to insert
-    newptr - a temp pointer (this actually gets initialized within the function, so don't have to initialze. However, notes are stored here regradless).
-    */    
-    //First, check if the node index is the same
-    /*
-    if((node1->row * mat_t->n + node1->col) < (currentnode->row * mat_t->n + currentnode->col)){
-        node1->value = currentnode->value; //Set new value
-        break; //Break loop, node placement completed
-    }
-    if((node1->row * mat_t->n + node1->col) < (currentnode->row * mat_t->n + currentnode->col)){ //If index of the next node is less than the index of the current node
-     //AND if the index of the current node is less than the index of the next node + 1
-     if((node2->row * mat_t->n + node2->col) > (currentnode->row * mat_t->n + currentnode->col)){
-         //Place new node in between node 1 and node 2
-         sp_tuples_node* newptr;
-         //Set next pointers correctly
-         newptr = (sp_tuples_node*)malloc(sizeof(sp_tuples_node)); //Allocate memory for new node, return pointer into newptr
-         newptr->next = node1->next; //Set new node's next to node2 
-         node1->next = newptr; //Set first node's next to new node
-         //Now initialize values into new node
-         newptr->row = row;
-         newptr->col = col;
-         mat_t->nz++; //Increment nz
-         break; //Break loop
-     }
-    
-    }*/
     return;
 }
 
@@ -214,6 +186,7 @@ We are given matrices A and B (matA and matB, respectively), need to merge
 them into the same matrix (matrix C). Follow the given algorithm:
 */
     //Check if matrices can be added. If not, return NULL.
+    printf("--------------Adding Tuples....--------------------\n");
     if(matA->m != matB->m || matA->n != matB->n)
     return NULL;
 
@@ -232,17 +205,19 @@ them into the same matrix (matrix C). Follow the given algorithm:
     //Throw matrix A into matrix C, use set_tuples and gv_tuples
     for(i = 0; i < matA->nz; i++){
         value = gv_tuples(matA, matAnode->row, matAnode->col);
+        printf("A:The value at node %d is: %lf, with row %d and col %d\n", i, value, matAnode->row, matAnode->col);
         set_tuples(retmat, matAnode->row, matAnode->col, value);
         matAnode = matAnode->next;
     }
     for(i = 0; i < matB->nz;i++){
         value = gv_tuples(matB, matBnode->row, matBnode->col); //Takes value in matrix B at index, stores into "value"
-        checkA = gv_tuples(matA, matBnode->row, matBnode->col); //Takes value in matrix A at index, stores into "checkA"
+        printf("B:The value at node %d is: %lf, with row %d and col %d\n", i, value, matBnode->row, matBnode->col);
+        checkA = gv_tuples(retmat, matBnode->row, matBnode->col); //Takes value in matrix A at index, stores into "checkA"
         if(checkA != 0){ //If value in matrix A at index is nonzero, then add values and set tuple
             value = value + checkA;
             set_tuples(retmat, matBnode->row, matBnode->col, value);
         }
-        else{ //Else - value in matrix A at specified index is zero, 
+        if(checkA == 0) { //Else - value in matrix A at specified index is zero, 
             set_tuples(retmat, matBnode->row, matBnode->col, value);
         }
         matBnode = matBnode->next;

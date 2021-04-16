@@ -30,12 +30,12 @@ int main(int argc, char *argv[]){
     }
 
 
-	TEST_1:printf("calling load_tuples on \"matrices/input_mats/a_A.txt\":\n");
-	sp_tuples * unscrambledrowst = load_tuples("matrices/input_mats/a_A.txt");
+	TEST_1:printf("calling load_tuples on \"matrices/input_mats/scrambled_rows.txt\":\n");
+	sp_tuples * unscrambledrowst = load_tuples("matrices/input_mats/scrambled_rows.txt");
 	printt(unscrambledrowst);
 	
-	printf("calling load_tuples on \"matrices/input_mats/a_B.txt\":\n");
-	sp_tuples * unscrambledrowstlarge = load_tuples("matrices/input_mats/a_B.txt");
+	printf("calling load_tuples on \"matrices/input_mats/scrambled_rows_large.txt\":\n");
+	sp_tuples * unscrambledrowstlarge = load_tuples("matrices/input_mats/scrambled_rows_large.txt");
 	printt(unscrambledrowstlarge);
 	
 	printf("calling load_tuples on \"matrices/input_mats/withZeroes.txt\":\n");
