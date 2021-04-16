@@ -3,30 +3,35 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
-
 /*
-typedef struct sp_tuples_node
-{
-    double value;
-    int row;
-    int col;
-    struct sp_tuples_node * next;
-
-} sp_tuples_node;
-
-
-typedef struct sp_tuples //list of coordinate format - each node is a tuple containing row col and value.
-{
-    int m; //# of rows
-    int n; //# of cols
-    int nz;//# of non-zero entries in matrix
-
-    sp_tuples_node * tuples_head;
-} sp_tuples;
+partners: jeremyl6, tmshu2, bgin2
+---------------------INTRO PARAGRAPH---------------------
+By utilising file I/O in addition to provided algorithms and base-case considerations,
+the program included reads and writes sparse matrices, as well as performs matrix
+addition between two specified matrices in different files. 
+The first function, load_tuples, uses file I/O to open the file, and then uses
+fscanf, in addition to a while loop and the linked-list format to allocate the
+appropriate memory needed to store the matrix. The function calls the 
+set_tuples function within it.
+The function gv_tuples returns the value at a given row index and column using
+the existing tuples structure. The function iterates through the linked list
+until the row index is found, or until the entire list has been iterated through,
+in which case returns zero.
+The function set_tuples deletes, creates, or replaces nodes within the linked list,
+in the order of their matrix index. It uses several base case considerations (included 
+in the comments) to perform its function properly. 
+The function save_tuples writes the dimensions of a matrix, the number of
+nonzero entries, as well as the indexes and values of each index into a specified
+output file. It uses basic file I/O functions in addition to existing head pointers 
+to accomplish this.
+The function add_tuples uses the function gv_tuples, as well as set_tuples and follows and algorithm
+to add two matrices together. First throwing the first matrix into a new linked list, it then 
+evaluates where to add nodes together or place new nodes using an algorithm. The function repeats
+until the matrices are fully added.
+The function destroy_tuples iterates throughout the linked list and deletes nodes as 
+the function progresses. It uses a previous pointer and next pointer to accomplish this, 
+first incrementing the next pointer and then deleting the node at the previous pointer's location.
 */
-
-
 sp_tuples * load_tuples(char* input_file) //Opne file with name 'input_file', return a matrix (pointer to matrix?) of the list
 {
 
@@ -40,11 +45,12 @@ sp_tuples * load_tuples(char* input_file) //Opne file with name 'input_file', re
     sp_tuples* tuple = (sp_tuples*)malloc(sizeof(sp_tuples));
     //3. Read matrix dimension and initialize sp_tuples
     fscanf(fpointer,"%d %d", &(tuple->m), &(tuple->n));
+    tuple->tuples_head = NULL;
     //4. Read through file line by line and use set_tuples() to build your list
     tuple->nz = 0;
     while(!feof(fpointer)){
         fscanf(fpointer,"%d %d %lf", &row, &col, &value);
-        printf("Load: The values of row, col, and value are: %d %d %lf\n", row, col, value);
+        //printf("Load: The values of row, col, and value are: %d %d %lf\n", row, col, value);
         set_tuples(tuple, row, col, value);
     }
     fclose(fpointer);
@@ -83,6 +89,13 @@ void set_tuples(sp_tuples * mat_t, int row, int col, double value)
     if(value == 0){ //If value is zero, we need to delete the associated node (if it exists)
         while(nodeptr != NULL){
             if(nodeptr->row == row && nodeptr->col == col){
+            //If the value is zero, AND it's at the head, then make new head
+                if(nodeptr == mat_t->tuples_head){
+                    mat_t->tuples_head = nodeptr->next;
+                    free(nodeptr);
+                    mat_t->nz--;
+                    return;;
+                }
                 if(nodeptr == mat_t->tuples_head){
                     mat_t->tuples_head = nodeptr->next;
                     free(nodeptr);
@@ -106,6 +119,7 @@ void set_tuples(sp_tuples * mat_t, int row, int col, double value)
         tempnode->row = row; //Initialize values for headnode
         tempnode->col = col;
         tempnode->value = value;
+        tempnode->next = NULL;
         mat_t->tuples_head = tempnode; //Set tuples_head to tempnode
         mat_t->nz++;
         return;
@@ -158,6 +172,7 @@ void set_tuples(sp_tuples * mat_t, int row, int col, double value)
 
 void save_tuples(char * file_name, sp_tuples * mat_t)
 {
+    if(mat_t != NULL){ //Checks to make sure that mat_t can be used to write
     FILE* fpointer = fopen(file_name, "w");//Open file to write
     sp_tuples_node* nodeptr = mat_t->tuples_head;//initialize node ptr for iteration
     fprintf(fpointer, "%d %d\n", mat_t->m, mat_t->n);//write the dimensions
@@ -167,8 +182,9 @@ void save_tuples(char * file_name, sp_tuples * mat_t)
     }
     fclose(fpointer);
 	return;
+    }
+    return;
 }
-
 
 
 sp_tuples * add_tuples(sp_tuples * matA, sp_tuples * matB){
@@ -186,7 +202,7 @@ We are given matrices A and B (matA and matB, respectively), need to merge
 them into the same matrix (matrix C). Follow the given algorithm:
 */
     //Check if matrices can be added. If not, return NULL.
-    printf("--------------Adding Tuples....--------------------\n");
+    //printf("--------------Adding Tuples....--------------------\n");
     if(matA->m != matB->m || matA->n != matB->n)
     return NULL;
 
@@ -205,13 +221,13 @@ them into the same matrix (matrix C). Follow the given algorithm:
     //Throw matrix A into matrix C, use set_tuples and gv_tuples
     for(i = 0; i < matA->nz; i++){
         value = gv_tuples(matA, matAnode->row, matAnode->col);
-        printf("A:The value at node %d is: %lf, with row %d and col %d\n", i, value, matAnode->row, matAnode->col);
+        //printf("A:The value at node %d is: %lf, with row %d and col %d\n", i, value, matAnode->row, matAnode->col);
         set_tuples(retmat, matAnode->row, matAnode->col, value);
         matAnode = matAnode->next;
     }
     for(i = 0; i < matB->nz;i++){
         value = gv_tuples(matB, matBnode->row, matBnode->col); //Takes value in matrix B at index, stores into "value"
-        printf("B:The value at node %d is: %lf, with row %d and col %d\n", i, value, matBnode->row, matBnode->col);
+        //printf("B:The value at node %d is: %lf, with row %d and col %d\n", i, value, matBnode->row, matBnode->col);
         checkA = gv_tuples(retmat, matBnode->row, matBnode->col); //Takes value in matrix A at index, stores into "checkA"
         if(checkA != 0){ //If value in matrix A at index is nonzero, then add values and set tuple
             value = value + checkA;
@@ -222,14 +238,12 @@ them into the same matrix (matrix C). Follow the given algorithm:
         }
         matBnode = matBnode->next;
     }
-
-
 	return retmat;
 }
 
 
 
-sp_tuples * mult_tuples(sp_tuples * matA, sp_tuples * matB){ 
+sp_tuples * mult_tuples(sp_tuples * matA, sp_tuples * matB){ //We did not implement this function.
     sp_tuples* retmat = NULL;
     return retmat;
 
@@ -238,15 +252,18 @@ sp_tuples * mult_tuples(sp_tuples * matA, sp_tuples * matB){
 
 	
 void destroy_tuples(sp_tuples * mat_t){
+    if(mat_t != NULL){//No point to free if mat_t is null
 	int length = mat_t->nz; //# of nodes plus headnode
     int i;
-    sp_tuples_node* prevptr = mat_t->tuples_head;
+    sp_tuples_node* prevptr = mat_t->tuples_head; //Initialize both node ptr and previous ptr
     sp_tuples_node* nextptr = mat_t->tuples_head;
-    for(i = 0; i < length; i++){
-        nextptr = prevptr->next;
-        free(prevptr);
-        prevptr = nextptr;
+    for(i = 0; i < length; i++){ //iterate through the nodes
+        nextptr = prevptr->next; //save the ptr before freeing so we can refrence it
+        free(prevptr);   //free the  node on the heap
+        prevptr = nextptr; //save ptr to resume cycle
     }
-    free(mat_t);
+    free(mat_t);  //free the sp_tuple
+    return;
+    }
     return;
 }

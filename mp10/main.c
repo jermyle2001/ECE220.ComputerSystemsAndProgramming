@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 
 
@@ -14,7 +13,7 @@ int main(int argc, char *argv[]){
         printf("Too many arguments.\n");
         return 0;
     }
-    
+
     if (argc == 2){
         int s = atoi(argv[1]);
         switch (s){
@@ -30,24 +29,24 @@ int main(int argc, char *argv[]){
     }
 
 
-	TEST_1:printf("calling load_tuples on \"matrices/input_mats/a_A.txt\":\n");
-	sp_tuples * unscrambledrowst = load_tuples("matrices/input_mats/a_A.txt");
+	TEST_1:printf("calling load_tuples on \"matrices/input_mats/scrambled_rows.txt\":\n");
+	sp_tuples * unscrambledrowst = load_tuples("matrices/input_mats/scrambled_rows.txt");
 	printt(unscrambledrowst);
-	
-	printf("calling load_tuples on \"matrices/input_mats/a_B.txt\":\n");
-	sp_tuples * unscrambledrowstlarge = load_tuples("matrices/input_mats/a_B.txt");
+
+	printf("calling load_tuples on \"matrices/input_mats/scrambled_rows_large.txt\":\n");
+	sp_tuples * unscrambledrowstlarge = load_tuples("matrices/input_mats/scrambled_rows_large.txt");
 	printt(unscrambledrowstlarge);
-	
+
 	printf("calling load_tuples on \"matrices/input_mats/withZeroes.txt\":\n");
 	sp_tuples * withZeroest = load_tuples("matrices/input_mats/withZeroes.txt");
 	printt(withZeroest);
-	
+
 	sp_tuples * a_At = load_tuples("matrices/input_mats/a_A.txt");
 	sp_tuples * a_Bt = load_tuples("matrices/input_mats/a_B.txt");
 	printf("a_Ct = a_A+a_B addition in tuples:\n");
 	sp_tuples * a_Ct = add_tuples(a_At,a_Bt);
 	printt(a_Ct);
-	
+
 	sp_tuples * sa_At = load_tuples("matrices/input_mats/sa_A.txt");
 	sp_tuples * sa_Bt = load_tuples("matrices/input_mats/sa_B.txt");
 	printf("sa_Ct = sa_A+sa_B sparse addition in tuples:\n");
@@ -59,7 +58,7 @@ int main(int argc, char *argv[]){
 	printf("m_Ct = m_A*m_B multiplication in tuples:\n");
 	sp_tuples * m_Ct = mult_tuples(m_At,m_Bt);
 	printt(m_Ct);
-	
+
 	sp_tuples * sm_At = load_tuples("matrices/input_mats/sm_A.txt");
 	sp_tuples * sm_Bt = load_tuples("matrices/input_mats/sm_B.txt");
 	printf("sm_Ct = sm_A*sm_B sparse multiplication in tuples:\n");
@@ -79,9 +78,9 @@ int main(int argc, char *argv[]){
 	printf("sml_C = sml_A*sml_B sparse multiplication in tuples:\n");
 	sp_tuples * sml_C = mult_tuples(sml_A,sml_B);
 	printt(sml_C);
-	
+
 	printf("Saving output matrices... \n");
-	
+
 	save_tuples("matrices/output_mats/withZeroest.txt",withZeroest);
 	save_tuples("matrices/output_mats/unscrambled.txt",unscrambledrowst);
 	save_tuples("matrices/output_mats/unscrambledlarge.txt",unscrambledrowstlarge);
@@ -103,21 +102,21 @@ int main(int argc, char *argv[]){
 	destroy_tuples(sm_At);
 	destroy_tuples(sla_A);
 	destroy_tuples(sml_A);
-	
+
 	destroy_tuples(a_Bt);
 	destroy_tuples(sa_Bt);
 	destroy_tuples(m_Bt);
 	destroy_tuples(sm_Bt);
 	destroy_tuples(sla_B);
 	destroy_tuples(sml_B);
-	
+
 	destroy_tuples(a_Ct);
 	destroy_tuples(sa_Ct);
 	destroy_tuples(m_Ct);
 	destroy_tuples(sm_Ct);
 	destroy_tuples(sla_C);
 	destroy_tuples(sml_C);
-	
+
 
     return 0;
 }
