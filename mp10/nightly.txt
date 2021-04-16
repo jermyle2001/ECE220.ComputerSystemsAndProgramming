@@ -1,34 +1,44 @@
 Compilation Results:
 ********************
-sparsemat.c: In function ‘add_tuples’:
-sparsemat.c:43:9: error: ‘retmat’ undeclared (first use in this function)
-  return retmat;
-         ^
-sparsemat.c:43:9: note: each undeclared identifier is reported only once for each function it appears in
-sparsemat.c: In function ‘mult_tuples’:
-sparsemat.c:49:12: error: ‘retmat’ undeclared (first use in this function)
-     return retmat;
-            ^
-sparsemat.c: In function ‘add_tuples’:
-sparsemat.c:44:1: warning: control reaches end of non-void function [-Wreturn-type]
- }
- ^
-sparsemat.c: In function ‘mult_tuples’:
-sparsemat.c:51:1: warning: control reaches end of non-void function [-Wreturn-type]
- }
- ^
-make: *** [sparsemat.o] Error 1
 
 load_tuples test: 10 pts total
+Test 1: load tuple
+Load: The values of row, col, and value are: 4 1 -0.829100
+Load: The values of row, col, and value are: 5 2 0.537000
+Load: The values of row, col, and value are: 23 3 0.241400
+Load: The values of row, col, and value are: 29 3 0.472300
+Load: The values of row, col, and value are: 30 3 -0.025900
+Load: The values of row, col, and value are: 4 4 -0.935900
+Load: The values of row, col, and value are: 15 4 -1.372400
+Load: The values of row, col, and value are: 16 4 0.101200
+Load: The values of row, col, and value are: 0 5 -0.032200
+Load: The values of row, col, and value are: 4 5 1.028600
+Load: The values of row, col, and value are: 17 5 -0.232100
+Load: The values of row, col, and value are: 19 7 -0.528200
+Load: The values of row, col, and value are: 1 8 -0.115000
+Load: The values of row, col, and value are: 8 8 -0.354200
+Load: The values of row, col, and value are: 28 8 -1.136400
+Load: The values of row, col, and value are: 0 9 -0.683400
+Load: The values of row, col, and value are: 27 9 -1.470500
+Load: The values of row, col, and value are: 9 11 -0.926600
+Load: The values of row, col, and value are: 24 11 0.683300
+Load: The values of row, col, and value are: 30 11 0.022000
+Load: The values of row, col, and value are: 30 11 0.022000
++5: load_tuples: m,n,nnz match
++5: load_tuples: nodes match
 
 gv_tuples test: 6 pts total
+Test 2: gv
++6: gv_tuples
 
 set_tuples test: 6 pts 
+Test 3-0: set
++6: set_tuples: delete node at tail
 
-0
-Failed the nightly test.
+22
+Pass the nightly test!!!
 This nightly test is focusing on compilation error not functionality test.
 This nightly report only tests on the released testcases.
 There are many hidden edge testcase for the MP. Please test it yourselve.
 HIGHLY RECOMMEND YOU TO START YOUR MP EARLY!!!!!!!
-Timestamp: 2021-04-15_00:39:42
+Timestamp: 2021-04-16_00:40:10
